@@ -17,7 +17,16 @@ function findByEmail(email: string) {
   });
 }
 
+function findById(id: number) {
+  return prisma.users.findUnique({
+    where: {
+      id,
+    },
+  });
+}
+
 export default {
   create,
   findByEmail,
+  findById,
 };

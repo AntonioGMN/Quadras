@@ -12,7 +12,13 @@ export async function signUp(req: Request, res: Response) {
 export async function login(req: Request, res: Response) {
   const user = req.body;
 
-  await userService.signUp(user);
+  const token = await userService.login(user);
 
-  res.sendStatus(201);
+  res.send(token).status(200);
+}
+
+export async function findUser(req: Request, res: Response) {
+  const { user } = res.locals;
+
+  res.send(user).status(200);
 }
