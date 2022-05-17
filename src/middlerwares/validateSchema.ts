@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { unauthorizedError } from '../utils/errorUtils';
 
 export default function validateSchema(schema) {
 	return (req: Request, res: Response, next: NextFunction) => {
@@ -6,7 +7,7 @@ export default function validateSchema(schema) {
 
 		if (validation.error) {
 			const messageErro = validation.error.details.map((m) => m.message);
-			return res.status(422).send(messageErro);
+			throw unauthorizedError(messageErro);
 		}
 
 		return next();

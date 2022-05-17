@@ -3,21 +3,18 @@ import faker from '@faker-js/faker';
 import app from '../src/app.js';
 import { createUserData } from '../src/repositories/userRepository.js';
 import prisma from '../src/database.js';
+import { getTokenFactory, userBodyFactory } from './factories/authFactory.js';
 
 describe('users tests', () => {
   afterEach(async () => {
-    await prisma.$executeRaw`TRUNCATE TABLE users`;
+    await prisma.$executeRaw`TRUNCATE TABLE users, partidas CASCADE`;
   });
 
   afterAll(async () => {
     await prisma.$disconnect();
   });
 
-  const createUser: createUserData = {
-    email: faker.internet.email(),
-    password: faker.internet.password(),
-    name: faker.name.findName(),
-  };
+  const createUser: createUserData = userBodyFactory();
 
   it('successful signUp', async () => {
     const result = await supertest(app).post('/signUp').send(createUser);
@@ -44,9 +41,28 @@ describe('users tests', () => {
   });
 
   it('reccessful search for a user using a email', async () => {
-    await supertest(app).post('/signUp').send(createUser);
-    const result = await supertest(app).get('/users').send(createUser.email);
+    const token = await getTokenFactory();
+    const result = await supertest(app).get('/users').send(createUser.email).set('Authorization', `${token}`);
 
     expect(result.status).toEqual(200);
+  });
+});
+
+describe('partidas tests', () => {
+  afterEach(async () => {
+    await prisma.$executeRaw`TRUNCATE TABLE users, partidas CASCADE`;
+  });
+
+  afterAll(async () => {
+    await prisma.$disconnect();
+  });
+
+  it('return 200 on get partidas', async () => {
+    const token = await getTokenFactory();
+    const result = await supertest(app).get('/partidas').set('Authorization', `${token}`);
+    const partidas = prisma.partidas.findMany();
+
+    expect(result.status).toEqual(200);
+    expect(partidas).not.toBeNull();
   });
 });

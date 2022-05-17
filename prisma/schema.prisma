@@ -8,8 +8,38 @@ datasource db {
 }
 
 model users {
-  id       Int    @id @default(autoincrement())
-  name     String
-  email    String @unique
-  password String
+  id            Int             @id @default(autoincrement())
+  name          String          @db.VarChar(200)
+  email         String          @unique
+  password      String          @db.VarChar(200)
+  reunioes      partidas[]
+  participantes participantes[]
+}
+
+model partidas {
+  id            Int             @id @default(autoincrement())
+  name          String          @db.VarChar(200)
+  data          DateTime
+  incio         DateTime
+  termino       DateTime
+  local         locals          @relation(fields: [localId], references: [id])
+  localId       Int
+  creator       users           @relation(fields: [creatorId], references: [id])
+  creatorId     Int
+  participantes participantes[]
+}
+
+model participantes {
+  partida        partidas @relation(fields: [partidaId], references: [id])
+  partidaId      Int
+  participante   users    @relation(fields: [participanteId], references: [id])
+  participanteId Int
+
+  @@id([partidaId, participanteId])
+}
+
+model locals {
+  id       Int        @id @default(autoincrement())
+  name     String     @db.VarChar(200)
+  reunioes partidas[]
 }
