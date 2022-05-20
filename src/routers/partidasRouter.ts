@@ -6,5 +6,6 @@ import partidaSchema from '../schemas/partidasSchema.js';
 
 const partidasRouter = Router();
 partidasRouter.get('/partidas', validateToken, partidasController.getAll);
+partidasRouter.post('/partidas', validateToken, validateSchema(partidaSchema), partidasController.create);
 
 export default partidasRouter;

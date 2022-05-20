@@ -1,5 +1,5 @@
-import { NextFunction, Request, Response } from 'express';
-import { unauthorizedError } from '../utils/errorUtils';
+import { NextFunction, Request, Response } from "express";
+import { unauthorizedError } from "../utils/errorUtils.js";
 
 export default function validateSchema(schema) {
 	return (req: Request, res: Response, next: NextFunction) => {

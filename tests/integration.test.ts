@@ -65,4 +65,23 @@ describe('partidas tests', () => {
     expect(result.status).toEqual(200);
     expect(partidas).not.toBeNull();
   });
+
+  it('return 201 on create a partida', async () => {
+    const createUser: createUserData = userBodyFactory();
+    const user = await prisma.users.create({ data: createUser });
+
+    const partidaBody = {
+      name: faker.name.findName(),
+      date: faker.date.future(),
+      inicio: '15:00',
+      termino: '18:00',
+      local: faker.name.findName(),
+      creatorId: user.id,
+    };
+
+    const token = await getTokenFactory();
+    const result = await supertest(app).post('/partidas').send(partidaBody).set('Authorization', `${token}`);
+
+    expect(result.status).toEqual(201);
+  });
 });
