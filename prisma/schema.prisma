@@ -19,7 +19,7 @@ model users {
 model partidas {
   id            Int             @id @default(autoincrement())
   name          String          @db.VarChar(200)
-  date          DateTime
+  date          String
   inicio        String          @db.VarChar(100)
   termino       String          @db.VarChar(100)
   local         String

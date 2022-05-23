@@ -59,7 +59,7 @@ describe('partidas tests', () => {
 
   it('return 200 on get partidas', async () => {
     const token = await getTokenFactory();
-    const result = await supertest(app).get('/partidas').set('Authorization', `${token}`);
+    const result = await supertest(app).get('/meeting').set('Authorization', `${token}`);
     const partidas = prisma.partidas.findMany();
 
     expect(result.status).toEqual(200);
@@ -80,7 +80,7 @@ describe('partidas tests', () => {
     };
 
     const token = await getTokenFactory();
-    const result = await supertest(app).post('/partidas').send(partidaBody).set('Authorization', `${token}`);
+    const result = await supertest(app).post('/meeting').send(partidaBody).set('Authorization', `${token}`);
 
     expect(result.status).toEqual(201);
   });
